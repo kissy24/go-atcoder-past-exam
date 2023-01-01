@@ -1,5 +1,3 @@
-//go:build ignore
-
 package main
 
 import (
@@ -19,7 +17,7 @@ Return:
 	(int): Doubled number
 	(error): String cannot be converted to int.
 */
-func toDoubledInt(s string) (int, error) {
+func ToDoubledInt(s string) (int, error) {
 	val, err := strconv.Atoi(s)
 	return val * 2, err
 }
@@ -31,7 +29,7 @@ func main() {
 	if sc.Scan() {
 		s = sc.Text()
 	}
-	doubledNum, err := toDoubledInt(s)
+	doubledNum, err := ToDoubledInt(s)
 	if err != nil {
 		fmt.Println("error")
 	} else {
