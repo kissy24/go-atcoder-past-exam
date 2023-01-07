@@ -15,7 +15,7 @@ func inputSales() []int {
 	return sales
 }
 
-func generateDiffs(sales []int) []int {
+func GenerateDiffs(sales []int) []int {
 	var diffs []int
 	for i := 1; i < len(sales); i++ {
 		diff := sales[i] - sales[i-1]
@@ -24,7 +24,7 @@ func generateDiffs(sales []int) []int {
 	return diffs
 }
 
-func format(salesDiff int) string {
+func Format(salesDiff int) string {
 	if salesDiff > 0 {
 		return fmt.Sprintf("up %d", salesDiff)
 	} else if salesDiff < 0 {
@@ -37,8 +37,8 @@ func format(salesDiff int) string {
 
 func main() {
 	sales := inputSales()
-	salesDiffs := generateDiffs(sales)
+	salesDiffs := GenerateDiffs(sales)
 	for _, sd := range salesDiffs {
-		fmt.Println(format(sd))
+		fmt.Println(Format(sd))
 	}
 }
