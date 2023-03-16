@@ -8,35 +8,49 @@ import (
 	"strings"
 )
 
-type States struct {
+const (
+	YES = "Y"
+	NO  = "N"
+)
+
+type SNS struct {
+	follow_state []string
 }
 
-func Follow(follow [][]bool, a int, b int) {
-	follow[a-1][b-1] = true
+func (sns *SNS) Follow(a int, b int) {
+	sns.follow_state[a-1] = sns.follow_state[a-1][:b-1] + YES + sns.follow_state[a-1][b:]
 }
 
-func FollowFollow(follow [][]bool, a int, n int) {
+func (sns *SNS) FollowFollow(a int, n int) {
 	toFollow := make([]int, 0)
 	for j := 0; j < n; j++ {
-		if follow[a-1][j] {
+		if sns.follow_state[a-1][j] == YES[0] {
 			for k := 0; k < n; k++ {
-				if follow[j][k] && k != a-1 {
+				if sns.follow_state[j][k] == YES[0] && k != a-1 {
 					toFollow = append(toFollow, k)
 				}
 			}
 		}
 	}
 	for _, j := range toFollow {
-		Follow(follow, a, j+1)
+		sns.Follow(a, j+1)
 	}
 }
 
-func FollowBackAll(follow [][]bool, a int, n int) {
+func (sns *SNS) FollowBackAll(a int, n int) {
 	for j := 0; j < n; j++ {
-		if follow[j][a-1] {
-			Follow(follow, a, j+1)
+		if sns.follow_state[j][a-1] == YES[0] {
+			sns.Follow(a, j+1)
 		}
 	}
+}
+
+func InitSNS(n int) *SNS {
+	follow_state := make([]string, n)
+	for i := range follow_state {
+		follow_state[i] = strings.Repeat(NO, n)
+	}
+	return &SNS{follow_state: follow_state}
 }
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -77,10 +91,7 @@ func ToInts(s []string) []int {
 func main() {
 	n, _, logs := parse()
 
-	followMatrix := make([][]bool, n)
-	for i := range followMatrix {
-		followMatrix[i] = make([]bool, n)
-	}
+	sns := InitSNS(n)
 
 	for _, log := range logs {
 		op := log[0]
@@ -89,22 +100,15 @@ func main() {
 		switch op {
 		case 1:
 			b := log[2]
-			Follow(followMatrix, a, b)
+			sns.Follow(a, b)
 		case 2:
-			FollowBackAll(followMatrix, a, n)
+			sns.FollowBackAll(a, n)
 		case 3:
-			FollowFollow(followMatrix, a, n)
+			sns.FollowFollow(a, n)
 		}
 	}
 
 	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
-			if followMatrix[i][j] {
-				fmt.Print("Y")
-			} else {
-				fmt.Print("N")
-			}
-		}
-		fmt.Println()
+		fmt.Println(sns.follow_state[i])
 	}
 }
