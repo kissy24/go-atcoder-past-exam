@@ -17,5 +17,5 @@ jobs:
       - run: go mod tidy
       - run: go generate ./...
       - run: git diff --cached --exit-code
-      - run: go test ./... -v -cover -coverprofile coverage.out
+      - run: go test ./... -v -cover -coverprofile coverage.out -bench . -benchmem
       - uses: codecov/codecov-action@v3
