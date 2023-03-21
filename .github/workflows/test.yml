@@ -1,0 +1,22 @@
+name: test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.18.3
+      - run: go mod tidy
+      - run: go generate ./...
+      - run: git diff --cached --exit-code
+      - run: go test ./... -v -cover -coverprofile coverage.out
+      - run: go test -bench . -benchmem
+      - uses: codecov/codecov-action@v1
