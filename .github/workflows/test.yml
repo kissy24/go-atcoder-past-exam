@@ -18,5 +18,4 @@ jobs:
       - run: go generate ./...
       - run: git diff --cached --exit-code
       - run: go test ./... -v -cover -coverprofile coverage.out
-      - run: go test -bench . -benchmem
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v3
